@@ -1,0 +1,27 @@
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - ./mysql:/docker-entrypoint-initdb.d
+      - ./data:/data
+    ports:
+      - "3316:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root'
+  web:
+    build: .
+    volumes:
+      - ./redmine:/var/www/rails_root
+    environment:
+      DATABASE_HOST: 'db'
+      DATABASE_USER: 'root'
+      DATABASE_PASSWORD: 'root'
+    ports:
+      - "3000:3000"
+      - "1234:1234"
+    depends_on:
+      - db
+    tty: true
+    stdin_open: true
+
